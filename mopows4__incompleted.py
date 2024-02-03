@@ -1,35 +1,48 @@
 import tkinter as tk
+import tkinter.simpledialog as tks
 import win32api,win32gui
 import os
 import win32com.client as win32comc
 import json
 #import speech_recognition as sr语音分析用的库
 import re
+import time
+
 class options():
 
-    def open_prog(self):    
-        pt1=tk.Text(window, height=1) 
-        pt1.pack()
-        def pinput():
+    def new_App(self):    
+        data = {}
+        def pinput(resultp1,resultp2):
+            data[resultp1] = resultp2
+            with open('data.json',mode='w') as  f:
+                json.dump(data,f)                           
+        resultp1 = tks.askstring("store the app", "input the name：", parent=window_root)
+        resultp2 = tks.askstring("store the app", "input the address：", parent=window_root)
+        pinput(resultp1,resultp2)
+        web_ask = tk.Label(window_root, text=f"You've stored：{resultp1}")
+        web_ask.pack()
+    def open_App(self):    
+        def pinput(result):
             path = os.getcwd()
-            result=pt1.get("1.0","end")[:-1]
-            with open(path + r'\\m(信息文件，勿删).json',mode='r') as  f:
+            with open(path + r'\\data.json',mode='r') as  f:
                 data = json.load(f)
                 address = data[result]
                 win32api.ShellExecute(0, 'open',address , '', '', 1)                         
-        pb1=tk.Button(window, height=1, width=30, text="Input the name", command=pinput)  
-        pb1.pack()
+        result = tks.askstring("input the name", "input the name：", parent=window_root)
+        pinput(result)
+        web_ask = tk.Label(window_root, text=f"You've opened：{result}")
+        web_ask.pack()
     #web
     def open_web(self):
-        wt1=tk.Text(window, height=1) 
-        wt1.pack()
-        def tinput():
-            result=wt1.get("1.0","end")
-            y = f'https://www.{result}'
+        def tinput(result):
+            y = f'https://www.{result}.com'
             win32api.ShellExecute(0, 'open', y, '', '', 1)    
             print('Have already opened',result)                         
-        wb1=tk.Button(window, height=1, width=30, text="Input the name", command=tinput)  
-        wb1.pack()
+        result = tks.askstring("input the website", "input the website：", parent=window_root)
+        tinput(result)
+        web_ask = tk.Label(window_root, text=f"You've opened：{result}")
+        web_ask.pack()
+    #simple command
     def simpe_command(self,question):
         speak = win32comc.Dispatch("SAPI.SpVoice")
         r = sr.Recognizer()
@@ -52,21 +65,28 @@ class options():
 op = options()
 
 
-window=tk.Tk()
-window.title('mopow')
-window.geometry('300x300')#窗口大小以及距离x轴与y轴的距离
+window_root=tk.Tk()
+window_root.title('mopow')
+window_root.geometry('300x300')#窗口大小以及距离x轴与y轴的距离
    
 #菜单
 #菜单创建
-menus=tk.Menu(window)#在window上创建一个菜单栏menus
+menus=tk.Menu(window_root)#在window上创建一个菜单栏menus
 num1=tk.Menu(menus)#在menus上面创建一个选项栏num1
     
 #菜单命名
 menus.add_cascade(label='File',menu=num1)#将num1命名为File
-num1.add_command(label='Web',command=op.open_web)
-num1.add_command(label='Programe',command=op.open_prog)
+# num1.add_command(label='Web',command=op.open_web)
+# num1.add_command(label='App',command=op.open_App)
 num1.add_command(label='New_Mode',command= op.new_mode)
-num1.add_command(label='Exit',command=window.quit)#退出命令
+num1.add_command(label='New_app',command=op.new_App)
+num1.add_command(label='Exit',command=window_root.quit)#退出命令
+
+Web = tk.Button(text ="open a website", command = op.open_web)
+Web.pack()
+App = tk.Button(text ="open an app", command = op.open_App)
+App.pack()
+
 #显示
-window.config(menu=menus)#显示菜单
-window.mainloop()#显示窗口
+window_root.config(menu=menus)#显示菜单
+window_root.mainloop()#显示窗口

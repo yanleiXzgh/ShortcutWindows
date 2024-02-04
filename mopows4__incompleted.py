@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.simpledialog as tks
+import tkinter.messagebox as tkm
 import win32api,win32gui
 import os
 import win32com.client as win32comc
@@ -19,8 +20,8 @@ class options():
         resultp1 = tks.askstring("store the app", "input the name：", parent=window_root)
         resultp2 = tks.askstring("store the app", "input the address：", parent=window_root)
         pinput(resultp1,resultp2)
-        web_ask = tk.Label(window_root, text=f"You've stored：{resultp1}")
-        web_ask.pack()
+        tkm.showinfo(title = '',message=f"You've stored：{resultp1}")
+        op.App_bottom(window_root)   
     def open_App(self):    
         def pinput(result):
             path = os.getcwd()
@@ -30,8 +31,20 @@ class options():
                 win32api.ShellExecute(0, 'open',address , '', '', 1)                         
         result = tks.askstring("input the name", "input the name：", parent=window_root)
         pinput(result)
-        web_ask = tk.Label(window_root, text=f"You've opened：{result}")
-        web_ask.pack()
+        tkm.showinfo(title = '',message=f"You've opened：{result}")
+    
+    def App_bottom(self,window_root):
+        path = os.getcwd()
+        def open_App(i,result):    
+            win32api.ShellExecute(0, 'open',result, '', '', 1)                         
+            tkm.showinfo(title = '',message=f"You've opened：{i}")
+        with open(path + r'\\data.json',mode='r') as  f:
+            data = json.load(f)
+            for i in data:
+                b = tk.Button(window_root, text=i, command=lambda:open_App(i,data[i]))
+                b.pack()
+    
+    
     #web
     def open_web(self):
         def tinput(result):
@@ -40,8 +53,8 @@ class options():
             print('Have already opened',result)                         
         result = tks.askstring("input the website", "input the website：", parent=window_root)
         tinput(result)
-        web_ask = tk.Label(window_root, text=f"You've opened：{result}")
-        web_ask.pack()
+        tkm.showinfo(title = '',message=f"You've opened：{result}")
+
     #simple command
     def simpe_command(self,question):
         speak = win32comc.Dispatch("SAPI.SpVoice")
@@ -68,7 +81,7 @@ op = options()
 window_root=tk.Tk()
 window_root.title('mopow')
 window_root.geometry('300x300')#窗口大小以及距离x轴与y轴的距离
-   
+op.App_bottom(window_root)
 #菜单
 #菜单创建
 menus=tk.Menu(window_root)#在window上创建一个菜单栏menus

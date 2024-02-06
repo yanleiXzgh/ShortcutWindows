@@ -77,7 +77,7 @@ class options():
         pass
     def voice_mode():
     #TODO 接入基本功能，实现语音唤醒
-
+        pass
 op = options()
 
 

@@ -75,6 +75,8 @@ class options():
     def new_mode():
     #TODO 新建一个模组
         pass
+    def voice_mode():
+    #TODO 接入基本功能，实现语音唤醒
 
 op = options()
 

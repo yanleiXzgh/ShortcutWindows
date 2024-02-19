@@ -14,9 +14,11 @@ class options():
     def new_App(self):    
         data = {}
         def pinput(resultp1,resultp2):
+            with open('data.json',mode='r') as f:
+                data = json.load(f)
             data[resultp1] = resultp2
             # data.append({'name': resultp1, 'address': resultp2})  # 将新数据添加到列表中
-            with open('data.json',mode='w') as  f:
+            with open('data.json',mode='w') as f:
                 json.dump(data,f)                           
         resultp1 = tks.askstring("store the app", "input the name：", parent=window_root)
         resultp2 = tks.askstring("store the app", "input the address：", parent=window_root)
